@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: istio-alb-ingress
+  namespace: istio-system
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    
+    alb.ingress.kubernetes.io/subnets: subnet-09634b3e9061454c0, subnet-095f2cf257a6f6d7f, subnet-03888b1d9d9f30051
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:211125769956:certificate/d82cbbc4-319a-44c9-9e75-b198729067bd
+    alb.ingress.kubernetes.io/security-groups: sg-09822821615facdbc
+    
+spec:
+  ingressClassName: alb
+  rules:
+    - host: curiodesk.com  # Replace with your domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80
+

@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: my-app-vs
+  namespace: default
+spec:
+  hosts:
+    - "curiodesk.com"  # Accept traffic from all hosts
+  gateways:
+    - istio-system/my-istio-gateway  # Attach to the gateway we just created
+  http:
+    - match:
+        - uri:
+            prefix: "/"  # Route all traffic to the app
+      route:
+        - destination:
+            host: flask-service  # Change this to your service name
+            port:
+              number: 8000  # Change this to your service's exposed port
